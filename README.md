@@ -1,4 +1,4 @@
-# claude-news
+# claude-news-skill
 
 Turn Claude Code into your personal AI news aggregator — it searches the web, checks YouTube, scores articles against your interests, and posts a curated daily digest to Discord. No server, no app, just a slash command.
 

@@ -67,7 +67,7 @@ Pass **all** channels from PREFERENCES.md in a single call:
 uv run .claude/skills/ai-news/scripts/youtube_fetch.py '[{"id": "CHANNEL_ID", "name": "Channel Name"}, ...]'
 ```
 
-The script returns the **2 most recent non-Shorts videos** per channel as `{title, url, source}` objects. Include every result — these are already filtered to the latest 2 per creator. Check each video URL against the DB to skip duplicates, but do not apply the 7-day date filter to YouTube videos (RSS feeds don't expose reliable dates, and the 2-per-channel cap already keeps things fresh).
+The script returns the **5 most recent non-Shorts videos** per channel as `{title, url, source, published}` objects. Check each video URL against the DB to skip duplicates. Also apply the same 7-day date filter as web articles — drop any video whose `published` date is older than 7 days from today. If `published` is missing or unparseable, keep the video.
 
 ---
 
@@ -186,7 +186,7 @@ Then ask: **"Post these N items to Discord? [y/N]"**
 uv run .claude/skills/ai-news/scripts/post_discord.py '<json-array>'
 ```
 
-Each item needs: `title`, `url`, `score`, `source`. The script reads `DISCORD_TOKEN` and `NEWS_CHANNEL_ID` from `.env`.
+Each item needs: `title`, `url`, `score`, `source`, `published` (ISO date string — include for both web articles and YouTube videos). The script reads `DISCORD_TOKEN` and `NEWS_CHANNEL_ID` from `.env`.
 
 ---
 

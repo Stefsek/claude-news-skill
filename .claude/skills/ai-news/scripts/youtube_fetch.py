@@ -14,7 +14,7 @@ import sys
 import feedparser
 
 RSS_URL = "https://www.youtube.com/feeds/videos.xml?channel_id={}"
-MAX_PER_CHANNEL = 2
+MAX_PER_CHANNEL = 5
 
 
 def fetch_channel(channel_id: str, name: str) -> list[dict]:
@@ -27,6 +27,7 @@ def fetch_channel(channel_id: str, name: str) -> list[dict]:
             "title": entry.get("title", ""),
             "url": entry.get("link", ""),
             "source": f"YouTube: {name}",
+            "published": entry.get("published", ""),
         })
         if len(videos) >= MAX_PER_CHANNEL:
             break

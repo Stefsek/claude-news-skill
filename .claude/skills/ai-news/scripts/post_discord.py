@@ -43,10 +43,12 @@ def post_message(text: str) -> bool:
 def format_message(item: dict) -> str:
     score = item.get("score", 0)
     bar = "█" * round(score * 5) + "░" * (5 - round(score * 5))
+    published = item.get("published", "")
+    date_part = f" · {published}" if published else ""
     return (
         f"**{item['title']}**\n"
         f"{item['url']}\n"
-        f"_{item.get('source', '')} · {bar} {score:.2f}_"
+        f"_{item.get('source', '')}{date_part} · {bar} {score:.2f}_"
     )
 
 

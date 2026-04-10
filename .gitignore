@@ -20,6 +20,9 @@ build/
 # Claude Code local settings
 .claude/settings.local.json
 
+# Discord admin scripts
+clear_discord.py
+
 # IDE
 .idea/
 .vscode/

@@ -26,7 +26,7 @@ flowchart TD
     style L fill:#6b7280,color:#fff
 ```
 
-Claude acts as the orchestrator — it reads your preferences, builds search queries, fetches and verifies articles, scores them, and formats everything. The only code in this repo are two small Python scripts for YouTube RSS parsing and Discord posting.
+Claude acts as the orchestrator — it reads your preferences, builds search queries, fetches and verifies articles and videos, scores them, and formats everything. The only code in this repo are two small Python scripts for YouTube RSS parsing and Discord posting.
 
 ## Project structure
 
@@ -80,7 +80,7 @@ Edit `.claude/skills/ai-news/PREFERENCES.md` to configure:
 - **"I like this"** — topics included if they're good (0.5–0.8)
 - **"Skip this"** — topics filtered out automatically
 - **Preferred news sites** — sites searched with `site:` queries
-- **YouTube channels** — RSS feeds checked for latest 2 videos each
+- **YouTube channels** — RSS feeds checked for latest 5 videos each, filtered to the last 7 days
 - **Scoring boosts/penalties** — fine-tune what floats to the top
 
 ## Usage
@@ -109,13 +109,16 @@ Penalties (-0.1): Clickbait titles, paid announcements without technical depth.
 
 ## Date verification
 
-Every web article is fetched and its publish date is extracted from the HTML. Only articles published within the last 7 days are included. URL dates and search snippet dates are never trusted — this has prevented stale articles from leaking through.
+Every item — web articles and YouTube videos — is checked against a 7-day window from today's date. Only items published within the last 7 days are included.
 
-YouTube videos skip date verification since the 2-per-channel cap from RSS already ensures freshness.
+- **Web articles**: publish date is extracted from fetched HTML (`<time>`, `datePublished`, byline). URL dates and search snippet dates are never trusted.
+- **YouTube videos**: publish date comes from the RSS feed (`published` field). If the date is missing or unparseable, the video is kept as a safe fallback.
 
 ## Deduplication
 
 URLs are MD5-hashed and checked against the SQLite database before scoring. Near-identical titles to recent items are also skipped. This means you can run `/ai-news` multiple times a day without getting repeats.
+
+Each saved item includes a `published_date` (`YYYY-MM-DD`) so the history is queryable by when content was originally published, not just when it was fetched.
 
 ## Tech stack
 

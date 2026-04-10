@@ -10,6 +10,7 @@ import sys
 import time
 import urllib.request
 import urllib.error
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os
 
@@ -44,6 +45,11 @@ def format_message(item: dict) -> str:
     score = item.get("score", 0)
     bar = "█" * round(score * 5) + "░" * (5 - round(score * 5))
     published = item.get("published", "")
+    if published:
+        try:
+            published = datetime.fromisoformat(published.replace("Z", "+00:00")).strftime("%Y-%m-%d")
+        except (ValueError, AttributeError):
+            published = published[:10]
     date_part = f" · {published}" if published else ""
     return (
         f"**{item['title']}**\n"

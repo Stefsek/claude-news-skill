@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS items (
     summary TEXT,
     score REAL,
     source TEXT,
+    published_date TEXT,
     posted_at TEXT
 );
 CREATE TABLE IF NOT EXISTS runs (
@@ -193,10 +194,10 @@ Each item needs: `title`, `url`, `score`, `source`, `published` (ISO date string
 ## Step 10: Save to DB
 
 ```bash
-sqlite3 .claude/skills/ai-news/db/news.db "INSERT OR IGNORE INTO items (url_hash, url, title, summary, score, source, posted_at) VALUES ('HASH','URL','TITLE','SUMMARY',SCORE,'SOURCE',datetime('now'))"
+sqlite3 .claude/skills/ai-news/db/news.db "INSERT OR IGNORE INTO items (url_hash, url, title, summary, score, source, published_date, posted_at) VALUES ('HASH','URL','TITLE','SUMMARY',SCORE,'SOURCE','YYYY-MM-DD',datetime('now'))"
 ```
 
-Escape single quotes by doubling them (`'` → `''`).
+Normalize `published` to `YYYY-MM-DD` before inserting (take the first 10 characters of any ISO date string). Escape single quotes by doubling them (`'` → `''`).
 
 ---
 
